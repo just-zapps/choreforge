@@ -42,10 +42,9 @@ public class GenerationService {
 
         List<ScheduleRule> rules = List.of(
                 new ScheduleRule(DayOfWeek.TUESDAY, bathroomGroup),
-                new ScheduleRule(DayOfWeek.WEDNESDAY, studyGroup)
+                new ScheduleRule(DayOfWeek.WEDNESDAY, studyGroup),
+                new ScheduleRule(DayOfWeek.TUESDAY, takeOutTrash)
         );
-
-        List<DayOfWeek> trashDays = List.of(DayOfWeek.TUESDAY);
 
         List<TaskInstance> result = new ArrayList<>();
 
@@ -58,24 +57,22 @@ public class GenerationService {
                     Player assigned = players.get(playerIndex % players.size());
                     playerIndex++;
 
-                    for (TaskGroupItem item : rule.getGroup().getItems()) {
+                    if (rule.isGroupRule()) {
+                        for (TaskGroupItem item : rule.getGroup().getItems()) {
+                            result.add(new TaskInstance(
+                                    item.getTaskTemplate().getName(),
+                                    date,
+                                    assigned.getName()
+                            ));
+                        }
+                    } else if (rule.isTaskRule()) {
                         result.add(new TaskInstance(
-                                item.getTaskTemplate().getName(),
+                                rule.getTaskTemplate().getName(),
                                 date,
                                 assigned.getName()
                         ));
                     }
                 }
-            }
-            if (trashDays.contains(date.getDayOfWeek())) {
-                Player assigned = players.get(playerIndex % players.size());
-                playerIndex++;
-
-                result.add(new TaskInstance(
-                        takeOutTrash.getName(),
-                        date,
-                        assigned.getName()
-                ));
             }
         }
         return result;
