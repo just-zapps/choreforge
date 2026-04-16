@@ -39,7 +39,8 @@ public class GenerationService {
                             result.add(new TaskInstance(
                                     item.getTaskTemplate(),
                                     date,
-                                    assigned
+                                    assigned,
+                                    rule.getGroup().getName()
                             ));
                         }
                     } else if (rule.isTaskRule()) {
@@ -49,7 +50,8 @@ public class GenerationService {
                         result.add(new TaskInstance(
                                 rule.getTaskTemplate(),
                                 date,
-                                assigned
+                                assigned,
+                                null
                         ));
                     }
                 }

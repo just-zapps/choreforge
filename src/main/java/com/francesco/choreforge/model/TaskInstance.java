@@ -7,11 +7,13 @@ public class TaskInstance {
     private TaskTemplate taskTemplate;
     private LocalDate date;
     private Player assignedTo;
+    private String groupName;
 
-    public TaskInstance(TaskTemplate taskTemplate, LocalDate date, Player assignedTo) {
+    public TaskInstance(TaskTemplate taskTemplate, LocalDate date, Player assignedTo, String groupName) {
         this.taskTemplate = taskTemplate;
         this.date = date;
         this.assignedTo = assignedTo;
+        this.groupName = groupName;
     }
 
     public TaskTemplate getTaskTemplate() {
@@ -24,5 +26,9 @@ public class TaskInstance {
 
     public Player getAssignedTo() {
         return assignedTo;
+    }
+
+    public String getGroupName() {
+        return groupName;
     }
 }

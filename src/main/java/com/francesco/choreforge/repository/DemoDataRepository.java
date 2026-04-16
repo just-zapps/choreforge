@@ -1,6 +1,7 @@
 package com.francesco.choreforge.repository;
 
 import com.francesco.choreforge.model.*;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Repository;
 
 import java.time.DayOfWeek;
@@ -23,8 +24,8 @@ public class DemoDataRepository {
         TaskTemplate emptyBin = new TaskTemplate(3L, "Empty bin", 5, 2);
         TaskTemplate tidyDesk = new TaskTemplate(4L, "Tidy desk", 6, 3);
         TaskTemplate takeOutTrash = new TaskTemplate(5L, "Take out trash", 4, 2);
-        TaskTemplate washDishes = new TaskTemplate(6L, "Wash dishes", 5, 2);
-
+        TaskTemplate washDinnerDishes = new TaskTemplate(6L, "Wash dinner dishes", 5, 2);
+        TaskTemplate cookDinner = new TaskTemplate(7L, "Cook dinner", 7, 3);
 
         List<TaskGroupItem> bathroomItems = List.of(
                 new TaskGroupItem(cleanToilet, true),
@@ -44,7 +45,8 @@ public class DemoDataRepository {
                 new ScheduleRule(DayOfWeek.TUESDAY, bathroomGroup),
                 new ScheduleRule(DayOfWeek.WEDNESDAY, studyGroup),
                 new ScheduleRule(DayOfWeek.TUESDAY, takeOutTrash),
-                new ScheduleRule(washDishes)
+                new ScheduleRule(washDinnerDishes),
+                new ScheduleRule(cookDinner)
         );
     }
 
