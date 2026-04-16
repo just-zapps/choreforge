@@ -1,6 +1,7 @@
 package com.francesco.choreforge.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class TaskInstance {
 
@@ -10,6 +11,7 @@ public class TaskInstance {
     private Player assignedTo;
     private String groupName;
     private TaskStatus status;
+    private LocalDateTime completedAt;
 
     public TaskInstance(TaskTemplate taskTemplate, LocalDate date, Player assignedTo, String groupName) {
         this.id = null;
@@ -18,6 +20,7 @@ public class TaskInstance {
         this.assignedTo = assignedTo;
         this.groupName = groupName;
         this.status = status.PENDING;
+        this.completedAt = null;
     }
 
     public Long getId() {
@@ -50,5 +53,13 @@ public class TaskInstance {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public LocalDateTime getCompletedAt() {
+        return completedAt;
+    }
+
+    public void setCompletedAt(LocalDateTime completedAt) {
+        this.completedAt = completedAt;
     }
 }

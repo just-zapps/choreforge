@@ -51,4 +51,10 @@ public class TaskRepository {
                 .filter(task -> task.getAssignedTo().getId().equals(playerId))
                 .toList();
     }
+
+    public List<TaskInstance> findByDateBetween(LocalDate startDate, LocalDate endDate) {
+        return tasks.values().stream()
+                .filter(task -> !task.getDate().isBefore(startDate) && !task.getDate().isAfter(endDate))
+                .toList();
+    }
 }

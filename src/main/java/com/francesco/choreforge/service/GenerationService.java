@@ -61,6 +61,6 @@ public class GenerationService {
             }
         }
         taskRepository.saveAll(result);
-        return result;
+        return taskRepository.findByDateBetween(startDate, startDate.plusDays(6));
     }
 }

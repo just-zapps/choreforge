@@ -43,6 +43,7 @@ public class TaskController {
         return taskRepository.findById(id)
                 .map(task -> {
                     task.setStatus(TaskStatus.COMPLETED);
+                    task.setCompletedAt(java.time.LocalDateTime.now());
                     return "Task " + id + " completed!";
                 })
                 .orElse("Task not found");
