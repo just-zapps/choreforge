@@ -25,6 +25,7 @@ public class GenerationService {
         TaskTemplate emptyBin = new TaskTemplate(3L, "Empty bin", 5, 2);
         TaskTemplate tidyDesk = new TaskTemplate(4L, "Tidy desk", 6, 3);
         TaskTemplate takeOutTrash = new TaskTemplate(5L, "Take out trash", 4, 2);
+        TaskTemplate washDishes = new TaskTemplate(6L, "Wash dishes", 5, 2);
 
 
         List<TaskGroupItem> bathroomItems = List.of(
@@ -43,7 +44,8 @@ public class GenerationService {
         List<ScheduleRule> rules = List.of(
                 new ScheduleRule(DayOfWeek.TUESDAY, bathroomGroup),
                 new ScheduleRule(DayOfWeek.WEDNESDAY, studyGroup),
-                new ScheduleRule(DayOfWeek.TUESDAY, takeOutTrash)
+                new ScheduleRule(DayOfWeek.TUESDAY, takeOutTrash),
+                new ScheduleRule(washDishes)
         );
 
         List<TaskInstance> result = new ArrayList<>();
@@ -53,7 +55,7 @@ public class GenerationService {
         for (int i = 0; i < 7; i++) {
             LocalDate date = startDate.plusDays(i);
             for (ScheduleRule rule : rules) {
-                if (rule.getDayOfWeek() == date.getDayOfWeek()) {
+                if (rule.isEveryDay() || rule.getDayOfWeek() == date.getDayOfWeek()) {
                     Player assigned = players.get(playerIndex % players.size());
                     playerIndex++;
 
