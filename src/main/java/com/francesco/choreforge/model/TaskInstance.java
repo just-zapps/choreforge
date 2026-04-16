@@ -11,8 +11,8 @@ public class TaskInstance {
     private String groupName;
     private TaskStatus status;
 
-    public TaskInstance(Long id, TaskTemplate taskTemplate, LocalDate date, Player assignedTo, String groupName) {
-        this.id = id;
+    public TaskInstance(TaskTemplate taskTemplate, LocalDate date, Player assignedTo, String groupName) {
+        this.id = null;
         this.taskTemplate = taskTemplate;
         this.date = date;
         this.assignedTo = assignedTo;
@@ -22,6 +22,10 @@ public class TaskInstance {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public TaskTemplate getTaskTemplate() {
