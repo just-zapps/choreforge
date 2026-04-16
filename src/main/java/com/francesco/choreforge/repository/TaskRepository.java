@@ -1,12 +1,12 @@
 package com.francesco.choreforge.repository;
 
 import com.francesco.choreforge.model.TaskInstance;
+import com.francesco.choreforge.model.TaskStatus;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
-
-import static java.util.stream.Collectors.toList;
 
 @Repository
 public class TaskRepository {
@@ -56,5 +56,15 @@ public class TaskRepository {
         return tasks.values().stream()
                 .filter(task -> !task.getDate().isBefore(startDate) && !task.getDate().isAfter(endDate))
                 .toList();
+    }
+
+    public void markExpiredTaskAsMissed() {
+        LocalDateTime now = LocalDateTime.now();
+
+        tasks.values().forEach(task -> {
+            if (task.getStatus() == TaskStatus.PENDING && now.isAfter(task.getDueAt())) {
+                task.setStatus(TaskStatus.MISSED);
+            }
+        });
     }
 }

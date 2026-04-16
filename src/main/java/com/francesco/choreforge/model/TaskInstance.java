@@ -12,6 +12,7 @@ public class TaskInstance {
     private String groupName;
     private TaskStatus status;
     private LocalDateTime completedAt;
+    private LocalDateTime dueAt;
 
     public TaskInstance(TaskTemplate taskTemplate, LocalDate date, Player assignedTo, String groupName) {
         this.id = null;
@@ -21,6 +22,7 @@ public class TaskInstance {
         this.groupName = groupName;
         this.status = status.PENDING;
         this.completedAt = null;
+        this.dueAt = date.atTime(23,59,59);
     }
 
     public Long getId() {
@@ -61,5 +63,9 @@ public class TaskInstance {
 
     public void setCompletedAt(LocalDateTime completedAt) {
         this.completedAt = completedAt;
+    }
+
+    public LocalDateTime getDueAt() {
+        return dueAt;
     }
 }

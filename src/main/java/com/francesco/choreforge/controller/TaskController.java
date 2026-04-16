@@ -35,6 +35,7 @@ public class TaskController {
 
     @GetMapping("/tasks")
     public List<TaskInstance> getAllTasks() {
+        taskRepository.markExpiredTaskAsMissed();
         return taskRepository.findAll();
     }
 
@@ -42,20 +43,25 @@ public class TaskController {
     public String completeTask(@PathVariable Long id) {
         return taskRepository.findById(id)
                 .map(task -> {
+                    if (java.time.LocalDateTime.now().isAfter((task.getDueAt()))) {
+                        return "Task " + id + " is overdue and cannot be completed!\n";
+                    }
                     task.setStatus(TaskStatus.COMPLETED);
                     task.setCompletedAt(java.time.LocalDateTime.now());
-                    return "Task " + id + " completed!";
+                    return "Task " + id + " completed!\n";
                 })
-                .orElse("Task not found");
+                .orElse("Task not found\n");
     }
 
     @GetMapping("/tasks/today")
     public List<TaskInstance> getTodayTasks() {
+        taskRepository.markExpiredTaskAsMissed();
         return taskRepository.findByDate(LocalDate.now());
     }
 
     @GetMapping ("/tasks/player/{id}")
     public List<TaskInstance> getPlayerTasks(@PathVariable Long id) {
+        taskRepository.markExpiredTaskAsMissed();
         return taskRepository.findByPlayerId(id);
     }
 
