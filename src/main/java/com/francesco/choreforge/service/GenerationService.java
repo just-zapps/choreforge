@@ -2,6 +2,7 @@ package com.francesco.choreforge.service;
 
 import com.francesco.choreforge.model.*;
 import com.francesco.choreforge.repository.DemoDataRepository;
+import com.francesco.choreforge.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,10 +14,12 @@ public class GenerationService {
 
     private final DemoDataRepository demoDataRepository;
     private final AssignmentService assignmentService;
+    private final TaskRepository taskRepository;
 
-    public GenerationService(DemoDataRepository demoDataRepository, AssignmentService assignmentService) {
+    public GenerationService(DemoDataRepository demoDataRepository, AssignmentService assignmentService, TaskRepository taskRepository) {
         this.demoDataRepository = demoDataRepository;
         this.assignmentService = assignmentService;
+        this.taskRepository = taskRepository;
     }
 
     public List<TaskInstance> generateWeek(LocalDate startDate) {
@@ -60,6 +63,7 @@ public class GenerationService {
                 }
             }
         }
+        taskRepository.saveAll(result);
         return result;
     }
 }
