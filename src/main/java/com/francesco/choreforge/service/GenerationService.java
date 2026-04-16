@@ -56,10 +56,10 @@ public class GenerationService {
             LocalDate date = startDate.plusDays(i);
             for (ScheduleRule rule : rules) {
                 if (rule.isEveryDay() || rule.getDayOfWeek() == date.getDayOfWeek()) {
-                    Player assigned = players.get(playerIndex % players.size());
-                    playerIndex++;
-
                     if (rule.isGroupRule()) {
+                        Player assigned = players.get(playerIndex % players.size());
+                        playerIndex++;
+
                         for (TaskGroupItem item : rule.getGroup().getItems()) {
                             result.add(new TaskInstance(
                                     item.getTaskTemplate(),
@@ -68,6 +68,9 @@ public class GenerationService {
                             ));
                         }
                     } else if (rule.isTaskRule()) {
+                        Player assigned = players.get(playerIndex % players.size());
+                        playerIndex++;
+
                         result.add(new TaskInstance(
                                 rule.getTaskTemplate(),
                                 date,
