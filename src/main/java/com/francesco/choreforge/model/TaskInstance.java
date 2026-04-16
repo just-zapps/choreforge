@@ -4,25 +4,25 @@ import java.time.LocalDate;
 
 public class TaskInstance {
 
-    private String name;
+    private TaskTemplate taskTemplate;
     private LocalDate date;
-    private String assignedTo;
+    private Player assignedTo;
 
-    public TaskInstance(String name, LocalDate date, String assignedTo) {
-        this.name = name;
+    public TaskInstance(TaskTemplate taskTemplate, LocalDate date, Player assignedTo) {
+        this.taskTemplate = taskTemplate;
         this.date = date;
         this.assignedTo = assignedTo;
     }
 
-    public String getName() {
-        return name;
+    public TaskTemplate getTaskTemplate() {
+        return taskTemplate;
     }
 
     public LocalDate getDate() {
         return date;
     }
 
-    public String getAssignedTo() {
+    public Player getAssignedTo() {
         return assignedTo;
     }
 }

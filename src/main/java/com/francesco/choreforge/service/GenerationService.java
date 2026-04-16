@@ -60,16 +60,16 @@ public class GenerationService {
                     if (rule.isGroupRule()) {
                         for (TaskGroupItem item : rule.getGroup().getItems()) {
                             result.add(new TaskInstance(
-                                    item.getTaskTemplate().getName(),
+                                    item.getTaskTemplate(),
                                     date,
-                                    assigned.getName()
+                                    assigned
                             ));
                         }
                     } else if (rule.isTaskRule()) {
                         result.add(new TaskInstance(
-                                rule.getTaskTemplate().getName(),
+                                rule.getTaskTemplate(),
                                 date,
-                                assigned.getName()
+                                assigned
                         ));
                     }
                 }
