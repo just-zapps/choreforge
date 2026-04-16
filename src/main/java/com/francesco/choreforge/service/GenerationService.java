@@ -8,8 +8,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 @Service
 public class GenerationService {
 
@@ -28,6 +26,7 @@ public class GenerationService {
 
         List<TaskInstance> result = new ArrayList<>();
         int playerIndex = 0;
+        long taskInstanceId = 1L;
 
         for (int i = 0; i < 7; i++) {
             LocalDate date = startDate.plusDays(i);
@@ -39,6 +38,7 @@ public class GenerationService {
 
                         for (TaskGroupItem item : rule.getGroup().getItems()) {
                             result.add(new TaskInstance(
+                                    taskInstanceId++,
                                     item.getTaskTemplate(),
                                     date,
                                     assigned,
@@ -50,6 +50,7 @@ public class GenerationService {
                         playerIndex++;
 
                         result.add(new TaskInstance(
+                                taskInstanceId++,
                                 rule.getTaskTemplate(),
                                 date,
                                 assigned,
