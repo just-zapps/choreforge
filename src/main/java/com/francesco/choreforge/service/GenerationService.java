@@ -14,9 +14,11 @@ import java.util.List;
 public class GenerationService {
 
     private final DemoDataRepository demoDataRepository;
+    private final AssignmentService assignmentService;
 
-    public GenerationService(DemoDataRepository demoDataRepository) {
+    public GenerationService(DemoDataRepository demoDataRepository, AssignmentService assignmentService) {
         this.demoDataRepository = demoDataRepository;
+        this.assignmentService = assignmentService;
     }
 
     public List<TaskInstance> generateWeek(LocalDate startDate) {
@@ -32,7 +34,7 @@ public class GenerationService {
             for (ScheduleRule rule : rules) {
                 if (rule.isEveryDay() || rule.getDayOfWeek() == date.getDayOfWeek()) {
                     if (rule.isGroupRule()) {
-                        Player assigned = players.get(playerIndex % players.size());
+                        Player assigned = assignmentService.assignNextPlayer(players, playerIndex);
                         playerIndex++;
 
                         for (TaskGroupItem item : rule.getGroup().getItems()) {
@@ -44,7 +46,7 @@ public class GenerationService {
                             ));
                         }
                     } else if (rule.isTaskRule()) {
-                        Player assigned = players.get(playerIndex % players.size());
+                        Player assigned = assignmentService.assignNextPlayer(players, playerIndex);
                         playerIndex++;
 
                         result.add(new TaskInstance(
