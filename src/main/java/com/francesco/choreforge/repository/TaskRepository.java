@@ -3,7 +3,10 @@ package com.francesco.choreforge.repository;
 import com.francesco.choreforge.model.TaskInstance;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 @Repository
 public class TaskRepository {
@@ -35,5 +38,17 @@ public class TaskRepository {
                         && task.getAssignedTo().getId().equals(candidate.getAssignedTo().getId())
                         && java.util.Objects.equals(task.getGroupName(), candidate.getGroupName())
         );
+    }
+
+    public List<TaskInstance> findByDate(LocalDate date) {
+        return tasks.values().stream()
+                .filter(task -> task.getDate().equals(date))
+                .toList();
+    }
+
+    public List<TaskInstance> findByPlayerId(Long playerId) {
+        return tasks.values().stream()
+                .filter(task -> task.getAssignedTo().getId().equals(playerId))
+                .toList();
     }
 }

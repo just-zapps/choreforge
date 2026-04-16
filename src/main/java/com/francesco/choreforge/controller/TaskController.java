@@ -48,4 +48,14 @@ public class TaskController {
                 .orElse("Task not found");
     }
 
+    @GetMapping("/tasks/today")
+    public List<TaskInstance> getTodayTasks() {
+        return taskRepository.findByDate(LocalDate.now());
+    }
+
+    @GetMapping ("/tasks/player/{id}")
+    public List<TaskInstance> getPlayerTasks(@PathVariable Long id) {
+        return taskRepository.findByPlayerId(id);
+    }
+
 }
