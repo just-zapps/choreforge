@@ -48,6 +48,7 @@ public class TaskController {
                     }
                     task.setStatus(TaskStatus.COMPLETED);
                     task.setCompletedAt(java.time.LocalDateTime.now());
+                    task.getAssignedTo().modifyScore(task.getTaskTemplate().getPoints());
                     return "Task " + id + " completed!\n";
                 })
                 .orElse("Task not found\n");
