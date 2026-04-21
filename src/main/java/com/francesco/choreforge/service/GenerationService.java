@@ -2,6 +2,7 @@ package com.francesco.choreforge.service;
 
 import com.francesco.choreforge.model.*;
 import com.francesco.choreforge.repository.DemoDataRepository;
+import com.francesco.choreforge.repository.PlayerJPARepository;
 import com.francesco.choreforge.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +16,18 @@ public class GenerationService {
     private final DemoDataRepository demoDataRepository;
     private final AssignmentService assignmentService;
     private final TaskRepository taskRepository;
+    private final PlayerJPARepository playerJPARepository;
 
-    public GenerationService(DemoDataRepository demoDataRepository, AssignmentService assignmentService, TaskRepository taskRepository) {
+    public GenerationService(DemoDataRepository demoDataRepository, AssignmentService assignmentService, TaskRepository taskRepository, PlayerJPARepository playerJPARepository) {
         this.demoDataRepository = demoDataRepository;
         this.assignmentService = assignmentService;
         this.taskRepository = taskRepository;
+        this.playerJPARepository = playerJPARepository;
     }
 
     public List<TaskInstance> generateWeek(LocalDate startDate) {
 
-        List<Player> players = demoDataRepository.getPlayers();
+        List<Player> players = playerJPARepository.findAll();
         List<ScheduleRule> rules = demoDataRepository.getScheduleRules();
 
         List<TaskInstance> result = new ArrayList<>();

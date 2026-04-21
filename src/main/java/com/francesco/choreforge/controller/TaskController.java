@@ -3,7 +3,7 @@ package com.francesco.choreforge.controller;
 import com.francesco.choreforge.model.Player;
 import com.francesco.choreforge.model.TaskInstance;
 import com.francesco.choreforge.model.TaskStatus;
-import com.francesco.choreforge.repository.DemoDataRepository;
+import com.francesco.choreforge.repository.PlayerJPARepository;
 import com.francesco.choreforge.repository.TaskRepository;
 import com.francesco.choreforge.service.GenerationService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +19,12 @@ public class TaskController {
 
     private final GenerationService generationService;
     private final TaskRepository taskRepository;
-    private final DemoDataRepository demoDataRepository;
+    private final PlayerJPARepository playerJPARepository;
 
-    public TaskController(GenerationService generationService, TaskRepository taskRepository, DemoDataRepository demoDataRepository) {
+    public TaskController(GenerationService generationService, TaskRepository taskRepository, PlayerJPARepository playerJPARepository) {
         this.generationService = generationService;
         this.taskRepository = taskRepository;
-        this.demoDataRepository = demoDataRepository;
+        this.playerJPARepository = playerJPARepository;
     }
 
     @GetMapping("/test")
@@ -56,6 +56,7 @@ public class TaskController {
                     task.setStatus(TaskStatus.COMPLETED);
                     task.setCompletedAt(java.time.LocalDateTime.now());
                     task.getAssignedTo().modifyScore(task.getTaskTemplate().getPoints());
+                    playerJPARepository.save(task.getAssignedTo());
                     return "Task " + id + " completed!\n";
                 })
                 .orElse("Task not found\n");
@@ -75,7 +76,7 @@ public class TaskController {
 
     @GetMapping("/players")
     public List<Player> getPlayers() {
-        return demoDataRepository.getPlayers();
+        return playerJPARepository.findAll();
     }
 
 }

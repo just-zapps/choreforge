@@ -1,7 +1,12 @@
 package com.francesco.choreforge.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Player {
 
+    @Id
     private Long id;
     private String name;
     private int score;
@@ -10,6 +15,10 @@ public class Player {
         this.id = id;
         this.name = name;
         this.score = 0;
+    }
+
+    public Player() {
+
     }
 
     public Long getId() {
