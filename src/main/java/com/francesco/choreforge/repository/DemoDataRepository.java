@@ -1,7 +1,6 @@
 package com.francesco.choreforge.repository;
 
 import com.francesco.choreforge.model.*;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Repository;
 
 import java.time.DayOfWeek;

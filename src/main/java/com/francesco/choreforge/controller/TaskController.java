@@ -1,7 +1,9 @@
 package com.francesco.choreforge.controller;
 
+import com.francesco.choreforge.model.Player;
 import com.francesco.choreforge.model.TaskInstance;
 import com.francesco.choreforge.model.TaskStatus;
+import com.francesco.choreforge.repository.DemoDataRepository;
 import com.francesco.choreforge.repository.TaskRepository;
 import com.francesco.choreforge.service.GenerationService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +19,12 @@ public class TaskController {
 
     private final GenerationService generationService;
     private final TaskRepository taskRepository;
+    private final DemoDataRepository demoDataRepository;
 
-    public TaskController(GenerationService generationService, TaskRepository taskRepository) {
+    public TaskController(GenerationService generationService, TaskRepository taskRepository, DemoDataRepository demoDataRepository) {
         this.generationService = generationService;
         this.taskRepository = taskRepository;
+        this.demoDataRepository = demoDataRepository;
     }
 
     @GetMapping("/test")
@@ -63,10 +67,15 @@ public class TaskController {
         return taskRepository.findByDate(LocalDate.now());
     }
 
-    @GetMapping ("/tasks/player/{id}")
+    @GetMapping("/tasks/player/{id}")
     public List<TaskInstance> getPlayerTasks(@PathVariable Long id) {
         taskRepository.markExpiredTaskAsMissed();
         return taskRepository.findByPlayerId(id);
+    }
+
+    @GetMapping("/players")
+    public List<Player> getPlayers() {
+        return demoDataRepository.getPlayers();
     }
 
 }
