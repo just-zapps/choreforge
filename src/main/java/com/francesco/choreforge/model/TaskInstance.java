@@ -13,6 +13,7 @@ public class TaskInstance {
     private TaskStatus status;
     private LocalDateTime completedAt;
     private LocalDateTime dueAt;
+    private boolean penaltyApplied;
 
     public TaskInstance(TaskTemplate taskTemplate, LocalDate date, Player assignedTo, String groupName) {
         this.id = null;
@@ -23,6 +24,7 @@ public class TaskInstance {
         this.status = status.PENDING;
         this.completedAt = null;
         this.dueAt = date.atTime(23,59,59);
+        this.penaltyApplied = false;
     }
 
     public Long getId() {
@@ -67,5 +69,13 @@ public class TaskInstance {
 
     public LocalDateTime getDueAt() {
         return dueAt;
+    }
+
+    public boolean isPenaltyApplied() {
+        return penaltyApplied;
+    }
+
+    public void setPenaltyApplied(boolean penaltyApplied) {
+        this.penaltyApplied = penaltyApplied;
     }
 }

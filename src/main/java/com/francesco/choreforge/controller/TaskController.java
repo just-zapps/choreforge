@@ -43,6 +43,9 @@ public class TaskController {
     public String completeTask(@PathVariable Long id) {
         return taskRepository.findById(id)
                 .map(task -> {
+                    if (task.getStatus() == TaskStatus.COMPLETED) {
+                        return "Task " + id + " is already completed!\n";
+                    }
                     if (java.time.LocalDateTime.now().isAfter((task.getDueAt()))) {
                         return "Task " + id + " is overdue and cannot be completed!\n";
                     }

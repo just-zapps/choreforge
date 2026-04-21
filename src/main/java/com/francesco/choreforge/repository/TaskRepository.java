@@ -64,6 +64,11 @@ public class TaskRepository {
         tasks.values().forEach(task -> {
             if (task.getStatus() == TaskStatus.PENDING && now.isAfter(task.getDueAt())) {
                 task.setStatus(TaskStatus.MISSED);
+
+                if (!task.isPenaltyApplied()) {
+                    task.getAssignedTo().modifyScore(-task.getTaskTemplate().getPenalty());
+                    task.setPenaltyApplied(true);
+                }
             }
         });
     }
