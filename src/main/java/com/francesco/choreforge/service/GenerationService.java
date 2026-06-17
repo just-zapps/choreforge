@@ -18,12 +18,14 @@ public class GenerationService {
     private final AssignmentService assignmentService;
     private final PlayerJpaRepository playerJPARepository;
     private final TaskInstanceJpaRepository taskInstanceJpaRepository;
+    private final TaskLifecycleService taskLifecycleService;
 
-    public GenerationService(DemoScheduleProvider demoScheduleProvider, AssignmentService assignmentService, PlayerJpaRepository playerJPARepository, TaskInstanceJpaRepository taskInstanceJpaRepository) {
+    public GenerationService(DemoScheduleProvider demoScheduleProvider, AssignmentService assignmentService, PlayerJpaRepository playerJPARepository, TaskInstanceJpaRepository taskInstanceJpaRepository, TaskLifecycleService taskLifecycleService) {
         this.demoScheduleProvider = demoScheduleProvider;
         this.assignmentService = assignmentService;
         this.playerJPARepository = playerJPARepository;
         this.taskInstanceJpaRepository = taskInstanceJpaRepository;
+        this.taskLifecycleService = taskLifecycleService;
     }
 
     public List<TaskInstance> generateWeek(LocalDate startDate) {
@@ -32,12 +34,12 @@ public class GenerationService {
         );
 
         LocalDate weekEnd = weekStart.plusDays(6);
-
+        taskLifecycleService.markExpiredTasksAsMissed();
         List<TaskInstance> existingTasks =
                 taskInstanceJpaRepository.findByDateBetween(weekStart, weekEnd);
 
         if (!existingTasks.isEmpty()) {
-            return existingTasks;
+            return taskInstanceJpaRepository.findByDateBetween(weekStart, weekEnd);
         }
 
         List<Player> players = playerJPARepository.findAll();
