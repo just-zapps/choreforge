@@ -9,6 +9,12 @@ import java.util.List;
 @Repository
 public class DemoDataRepository {
 
+    private final TaskTemplateJpaRepository taskTemplateJpaRepository;
+
+    public DemoDataRepository(TaskTemplateJpaRepository taskTemplateJpaRepository) {
+        this.taskTemplateJpaRepository = taskTemplateJpaRepository;
+    }
+
     public List<Player> getPlayers() {
         return List.of(
                 new Player(1L, "Player1"),
@@ -18,13 +24,13 @@ public class DemoDataRepository {
 
     public List<ScheduleRule> getScheduleRules() {
 
-        TaskTemplate cleanToilet = new TaskTemplate(1L, "Clean toilet", 10, 5);
-        TaskTemplate cleanSink = new TaskTemplate(2L, "Clean sink", 8, 4);
-        TaskTemplate emptyBin = new TaskTemplate(3L, "Empty bin", 5, 2);
-        TaskTemplate tidyDesk = new TaskTemplate(4L, "Tidy desk", 6, 3);
-        TaskTemplate takeOutTrash = new TaskTemplate(5L, "Take out trash", 4, 2);
-        TaskTemplate washDinnerDishes = new TaskTemplate(6L, "Wash dinner dishes", 5, 2);
-        TaskTemplate cookDinner = new TaskTemplate(7L, "Cook dinner", 7, 3);
+        TaskTemplate cleanToilet = taskTemplateJpaRepository.findById(1L).orElseThrow();
+        TaskTemplate cleanSink = taskTemplateJpaRepository.findById(2L).orElseThrow();
+        TaskTemplate emptyBin = taskTemplateJpaRepository.findById(3L).orElseThrow();
+        TaskTemplate tidyDesk = taskTemplateJpaRepository.findById(4L).orElseThrow();
+        TaskTemplate takeOutTrash = taskTemplateJpaRepository.findById(5L).orElseThrow();
+        TaskTemplate washDinnerDishes = taskTemplateJpaRepository.findById(6L).orElseThrow();
+        TaskTemplate cookDinner = taskTemplateJpaRepository.findById(7L).orElseThrow();
 
         List<TaskGroupItem> bathroomItems = List.of(
                 new TaskGroupItem(cleanToilet, true),

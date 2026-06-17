@@ -1,15 +1,23 @@
 package com.francesco.choreforge.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Entity
 public class TaskInstance {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
     private TaskTemplate taskTemplate;
     private LocalDate date;
+    @ManyToOne
     private Player assignedTo;
     private String groupName;
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
     private LocalDateTime completedAt;
     private LocalDateTime dueAt;
@@ -25,6 +33,10 @@ public class TaskInstance {
         this.completedAt = null;
         this.dueAt = date.atTime(23,59,59);
         this.penaltyApplied = false;
+    }
+
+    public TaskInstance() {
+
     }
 
     public Long getId() {

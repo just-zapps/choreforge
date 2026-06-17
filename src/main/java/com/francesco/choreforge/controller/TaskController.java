@@ -3,9 +3,10 @@ package com.francesco.choreforge.controller;
 import com.francesco.choreforge.model.Player;
 import com.francesco.choreforge.model.TaskInstance;
 import com.francesco.choreforge.model.TaskStatus;
-import com.francesco.choreforge.repository.PlayerJPARepository;
-import com.francesco.choreforge.repository.TaskRepository;
+import com.francesco.choreforge.repository.PlayerJpaRepository;
+import com.francesco.choreforge.repository.TaskInstanceJpaRepository;
 import com.francesco.choreforge.service.GenerationService;
+import com.francesco.choreforge.service.TaskLifecycleService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,13 +19,15 @@ import java.util.List;
 public class TaskController {
 
     private final GenerationService generationService;
-    private final TaskRepository taskRepository;
-    private final PlayerJPARepository playerJPARepository;
+    private final PlayerJpaRepository playerJPARepository;
+    private final TaskInstanceJpaRepository taskInstanceJpaRepository;
+    private final TaskLifecycleService taskLifecycleService;
 
-    public TaskController(GenerationService generationService, TaskRepository taskRepository, PlayerJPARepository playerJPARepository) {
+    public TaskController(GenerationService generationService, PlayerJpaRepository playerJPARepository, TaskInstanceJpaRepository taskInstanceJpaRepository, TaskLifecycleService taskLifecycleService) {
         this.generationService = generationService;
-        this.taskRepository = taskRepository;
         this.playerJPARepository = playerJPARepository;
+        this.taskInstanceJpaRepository = taskInstanceJpaRepository;
+        this.taskLifecycleService = taskLifecycleService;
     }
 
     @GetMapping("/test")
@@ -39,13 +42,12 @@ public class TaskController {
 
     @GetMapping("/tasks")
     public List<TaskInstance> getAllTasks() {
-        taskRepository.markExpiredTaskAsMissed();
-        return taskRepository.findAll();
+        return taskInstanceJpaRepository.findAll();
     }
 
     @PostMapping("/tasks/{id}/complete")
     public String completeTask(@PathVariable Long id) {
-        return taskRepository.findById(id)
+        return taskInstanceJpaRepository.findById(id)
                 .map(task -> {
                     if (task.getStatus() == TaskStatus.COMPLETED) {
                         return "Task " + id + " is already completed!\n";
@@ -64,14 +66,14 @@ public class TaskController {
 
     @GetMapping("/tasks/today")
     public List<TaskInstance> getTodayTasks() {
-        taskRepository.markExpiredTaskAsMissed();
-        return taskRepository.findByDate(LocalDate.now());
+        taskLifecycleService.markExpiredTasksAsMissed();
+        return taskInstanceJpaRepository.findByDate(LocalDate.now());
     }
 
     @GetMapping("/tasks/player/{id}")
     public List<TaskInstance> getPlayerTasks(@PathVariable Long id) {
-        taskRepository.markExpiredTaskAsMissed();
-        return taskRepository.findByPlayerId(id);
+        taskLifecycleService.markExpiredTasksAsMissed();
+        return taskInstanceJpaRepository.findByAssignedTo_Id(id);
     }
 
     @GetMapping("/players")

@@ -1,7 +1,12 @@
 package com.francesco.choreforge.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class TaskTemplate {
 
+    @Id
     private Long id;
     private String name;
     private int points;
@@ -12,6 +17,10 @@ public class TaskTemplate {
         this.name = name;
         this.points = points;
         this.penalty = penalty;
+    }
+
+    public TaskTemplate() {
+
     }
 
     public Long getId() {

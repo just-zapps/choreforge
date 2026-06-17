@@ -2,8 +2,8 @@ package com.francesco.choreforge.service;
 
 import com.francesco.choreforge.model.*;
 import com.francesco.choreforge.repository.DemoDataRepository;
-import com.francesco.choreforge.repository.PlayerJPARepository;
-import com.francesco.choreforge.repository.TaskRepository;
+import com.francesco.choreforge.repository.PlayerJpaRepository;
+import com.francesco.choreforge.repository.TaskInstanceJpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,14 +15,14 @@ public class GenerationService {
 
     private final DemoDataRepository demoDataRepository;
     private final AssignmentService assignmentService;
-    private final TaskRepository taskRepository;
-    private final PlayerJPARepository playerJPARepository;
+    private final PlayerJpaRepository playerJPARepository;
+    private final TaskInstanceJpaRepository taskInstanceJpaRepository;
 
-    public GenerationService(DemoDataRepository demoDataRepository, AssignmentService assignmentService, TaskRepository taskRepository, PlayerJPARepository playerJPARepository) {
+    public GenerationService(DemoDataRepository demoDataRepository, AssignmentService assignmentService, PlayerJpaRepository playerJPARepository, TaskInstanceJpaRepository taskInstanceJpaRepository) {
         this.demoDataRepository = demoDataRepository;
         this.assignmentService = assignmentService;
-        this.taskRepository = taskRepository;
         this.playerJPARepository = playerJPARepository;
+        this.taskInstanceJpaRepository = taskInstanceJpaRepository;
     }
 
     public List<TaskInstance> generateWeek(LocalDate startDate) {
@@ -63,7 +63,10 @@ public class GenerationService {
                 }
             }
         }
-        taskRepository.saveAll(result);
-        return taskRepository.findByDateBetween(startDate, startDate.plusDays(6));
+        taskInstanceJpaRepository.saveAll(result);
+        return taskInstanceJpaRepository.findAll().stream()
+                .filter(task -> !task.getDate().isBefore(startDate)
+                        && !task.getDate().isAfter(startDate.plusDays(6)))
+                .toList();
     }
 }
