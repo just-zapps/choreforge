@@ -1,11 +1,12 @@
 package com.francesco.choreforge.service;
 
 import com.francesco.choreforge.model.*;
-import com.francesco.choreforge.repository.DemoDataRepository;
+import com.francesco.choreforge.config.DemoScheduleProvider;
 import com.francesco.choreforge.repository.PlayerJpaRepository;
 import com.francesco.choreforge.repository.TaskInstanceJpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,28 +14,40 @@ import java.util.List;
 @Service
 public class GenerationService {
 
-    private final DemoDataRepository demoDataRepository;
+    private final DemoScheduleProvider demoScheduleProvider;
     private final AssignmentService assignmentService;
     private final PlayerJpaRepository playerJPARepository;
     private final TaskInstanceJpaRepository taskInstanceJpaRepository;
 
-    public GenerationService(DemoDataRepository demoDataRepository, AssignmentService assignmentService, PlayerJpaRepository playerJPARepository, TaskInstanceJpaRepository taskInstanceJpaRepository) {
-        this.demoDataRepository = demoDataRepository;
+    public GenerationService(DemoScheduleProvider demoScheduleProvider, AssignmentService assignmentService, PlayerJpaRepository playerJPARepository, TaskInstanceJpaRepository taskInstanceJpaRepository) {
+        this.demoScheduleProvider = demoScheduleProvider;
         this.assignmentService = assignmentService;
         this.playerJPARepository = playerJPARepository;
         this.taskInstanceJpaRepository = taskInstanceJpaRepository;
     }
 
     public List<TaskInstance> generateWeek(LocalDate startDate) {
+        LocalDate weekStart = startDate.with(
+                java.time.temporal.TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)
+        );
+
+        LocalDate weekEnd = weekStart.plusDays(6);
+
+        List<TaskInstance> existingTasks =
+                taskInstanceJpaRepository.findByDateBetween(weekStart, weekEnd);
+
+        if (!existingTasks.isEmpty()) {
+            return existingTasks;
+        }
 
         List<Player> players = playerJPARepository.findAll();
-        List<ScheduleRule> rules = demoDataRepository.getScheduleRules();
+        List<ScheduleRule> rules = demoScheduleProvider.getScheduleRules();
 
         List<TaskInstance> result = new ArrayList<>();
         int playerIndex = 0;
 
         for (int i = 0; i < 7; i++) {
-            LocalDate date = startDate.plusDays(i);
+            LocalDate date = weekStart.plusDays(i);
             for (ScheduleRule rule : rules) {
                 if (rule.isEveryDay() || rule.getDayOfWeek() == date.getDayOfWeek()) {
                     if (rule.isGroupRule()) {
@@ -64,9 +77,6 @@ public class GenerationService {
             }
         }
         taskInstanceJpaRepository.saveAll(result);
-        return taskInstanceJpaRepository.findAll().stream()
-                .filter(task -> !task.getDate().isBefore(startDate)
-                        && !task.getDate().isAfter(startDate.plusDays(6)))
-                .toList();
+        return taskInstanceJpaRepository.findByDateBetween(weekStart, weekEnd);
     }
 }

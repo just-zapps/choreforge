@@ -1,36 +1,28 @@
-package com.francesco.choreforge.repository;
+package com.francesco.choreforge.config;
 
 import com.francesco.choreforge.model.*;
-import org.springframework.stereotype.Repository;
+import com.francesco.choreforge.repository.TaskTemplateJpaRepository;
+import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.util.List;
 
-@Repository
-public class DemoDataRepository {
+@Component
+public class DemoScheduleProvider {
 
     private final TaskTemplateJpaRepository taskTemplateJpaRepository;
 
-    public DemoDataRepository(TaskTemplateJpaRepository taskTemplateJpaRepository) {
+    public DemoScheduleProvider(TaskTemplateJpaRepository taskTemplateJpaRepository) {
         this.taskTemplateJpaRepository = taskTemplateJpaRepository;
     }
 
-    public List<Player> getPlayers() {
-        return List.of(
-                new Player(1L, "Player1"),
-                new Player(2L, "Player2")
-        );
-    }
-
     public List<ScheduleRule> getScheduleRules() {
-
         TaskTemplate cleanToilet = taskTemplateJpaRepository.findById(1L).orElseThrow();
         TaskTemplate cleanSink = taskTemplateJpaRepository.findById(2L).orElseThrow();
         TaskTemplate emptyBin = taskTemplateJpaRepository.findById(3L).orElseThrow();
         TaskTemplate tidyDesk = taskTemplateJpaRepository.findById(4L).orElseThrow();
         TaskTemplate takeOutTrash = taskTemplateJpaRepository.findById(5L).orElseThrow();
-        TaskTemplate washDinnerDishes = taskTemplateJpaRepository.findById(6L).orElseThrow();
-        TaskTemplate cookDinner = taskTemplateJpaRepository.findById(7L).orElseThrow();
+        TaskTemplate washDishes = taskTemplateJpaRepository.findById(6L).orElseThrow();
 
         List<TaskGroupItem> bathroomItems = List.of(
                 new TaskGroupItem(cleanToilet, true),
@@ -42,17 +34,17 @@ public class DemoDataRepository {
                 new TaskGroupItem(tidyDesk, true)
         );
 
-        TaskGroupTemplate bathroomGroup = new TaskGroupTemplate(1L, "Bathroom", bathroomItems);
-        TaskGroupTemplate studyGroup = new TaskGroupTemplate(2L, "Study", studyItems);
+        TaskGroupTemplate bathroomGroup =
+                new TaskGroupTemplate(1L, "Bathroom", bathroomItems);
 
+        TaskGroupTemplate studyGroup =
+                new TaskGroupTemplate(2L, "Study", studyItems);
 
         return List.of(
                 new ScheduleRule(DayOfWeek.TUESDAY, bathroomGroup),
                 new ScheduleRule(DayOfWeek.WEDNESDAY, studyGroup),
                 new ScheduleRule(DayOfWeek.TUESDAY, takeOutTrash),
-                new ScheduleRule(washDinnerDishes),
-                new ScheduleRule(cookDinner)
+                new ScheduleRule(washDishes)
         );
     }
-
 }

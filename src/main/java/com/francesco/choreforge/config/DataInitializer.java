@@ -11,22 +11,38 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DataInitializer {
 
+    private void saveTemplateIfMissing(TaskTemplateJpaRepository repository,
+                                       Long id,
+                                       String name,
+                                       int points,
+                                       int penalty) {
+        if (!repository.existsById(id)) {
+            repository.save(new TaskTemplate(id, name, points, penalty));
+        }
+    }
+
+    private void savePlayerIfMissing(PlayerJpaRepository repository,
+                                     Long id,
+                                     String name) {
+        if (!repository.existsById(id)) {
+            repository.save(new Player(id, name));
+        }
+    }
+
     @Bean
-    CommandLineRunner initPlayers(PlayerJpaRepository playerJPARepository, TaskTemplateJpaRepository taskTemplateJpaRepository) {
+    CommandLineRunner initPlayers(PlayerJpaRepository playerJpaRepository, TaskTemplateJpaRepository taskTemplateJpaRepository) {
         return args -> {
-            if (playerJPARepository.count() == 0) {
-                playerJPARepository.save(new Player(1L, "Player1"));
-                playerJPARepository.save(new Player(2L, "Player2"));
-            }
-            if (taskTemplateJpaRepository.count() == 0) {
-                taskTemplateJpaRepository.save(new TaskTemplate(1L, "Clean toilet", 10, 5));
-                taskTemplateJpaRepository.save(new TaskTemplate(2L, "Clean sink", 8, 4));
-                taskTemplateJpaRepository.save(new TaskTemplate(3L, "Empty bin", 5, 2));
-                taskTemplateJpaRepository.save(new TaskTemplate(4L, "Tidy desk", 6, 3));
-                taskTemplateJpaRepository.save(new TaskTemplate(5L, "Take out trash", 4, 2));
-                taskTemplateJpaRepository.save(new TaskTemplate(6L, "Wash dinner dishes", 5, 2));
-                taskTemplateJpaRepository.save(new TaskTemplate(7L, "Cook dinner", 7, 3));
-            }
+
+            savePlayerIfMissing(playerJpaRepository, 1L, "Player1");
+            savePlayerIfMissing(playerJpaRepository, 2L, "Player2");
+
+            saveTemplateIfMissing(taskTemplateJpaRepository, 1L, "Clean toilet", 10, 5);
+            saveTemplateIfMissing(taskTemplateJpaRepository, 2L, "Clean sink", 8, 4);
+            saveTemplateIfMissing(taskTemplateJpaRepository, 3L, "Empty bin", 5, 2);
+            saveTemplateIfMissing(taskTemplateJpaRepository, 4L, "Tidy desk", 6, 3);
+            saveTemplateIfMissing(taskTemplateJpaRepository, 5L, "Take out plastic", 4, 2);
+            saveTemplateIfMissing(taskTemplateJpaRepository, 6L, "Wash dishes", 5, 2);
+
         };
     }
 }
